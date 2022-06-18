@@ -6,7 +6,7 @@ const User = require ('../modelsDB/User.js');
 const jwt = require('jsonwebtoken')
 /* Register */
 router.post('/register', function(req, res, next) {
-  const {nickname, nameSurname, email, password, birthdate, country, experience} = req.body;
+  const {nickname, nameSurname, email, password, birthdate, country} = req.body;
  
  
 bcrypt.hash(password, 10). then((hash) =>{
@@ -58,9 +58,10 @@ router.post('/login', function(req, res, next) {
           "detail": ""});
         }else{
           const payload = {
-            nickname
+            nickname,
+            id : user._id
           };
-          const token = jwt.sign(payload, req.app.get('api_secret_key'),{expiresIn : 720});
+          const token = jwt.sign(payload, req.app.get('api_secret_key'),{expiresIn : 72000});
           res.json({
             token
           });
