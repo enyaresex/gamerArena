@@ -18,9 +18,9 @@ const UserSchema = new Schema ({
         required: true
     },
     avatar : {
-        type : string
+        type : String
     },
-    birthDate: {
+    birthdate: {
         type : Date
     },
     country : {
@@ -28,6 +28,10 @@ const UserSchema = new Schema ({
     },
     experience : {
         type: Schema.Types.Decimal128
+    },
+    registrationDate : {
+        type : Date,
+        default: Date.now
     },
     statistics : [{
         gameId : {type: Schema.Types.ObjectId},
