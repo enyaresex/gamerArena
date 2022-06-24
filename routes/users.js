@@ -63,7 +63,9 @@ router.post('/login', function(req, res, next) {
           };
           const token = jwt.sign(payload, req.app.get('api_secret_key'),{expiresIn : 72000});
           res.json({
-            token
+            token,
+            "coin" : 589,
+            "wallet" : 4785
           });
             }
         });
