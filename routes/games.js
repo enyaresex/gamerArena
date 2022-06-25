@@ -33,7 +33,7 @@ router.post('/', function(req, res, next) {
       }).catch(err => {
         console.log(err);
       });
-
+      
       //burada daha önce aynı oyun aynı ligte oyun oluşturulmuş mu diye de bakılacak yoksa aşağıdaki işlem
       // eğer oyun modu 0 bu eğitim modudur.   
       if(mode == 3){
@@ -82,9 +82,7 @@ router.post('/', function(req, res, next) {
      }).catch(err => {
       res.json(err);
      });
-
-
-    } 
+      } 
      }
   
   }).catch(err=>{
