@@ -11,6 +11,7 @@ const activityRouter = require('./routes/activity');
 const controlGame = require('./routes/controlGame');
 const testRouter = require('./routes/test');
 const profileRouter = require('./routes/profile');
+const profileImages= require('./routes/prolfileImages');
 
 const app = express();
 //db connection
@@ -40,6 +41,8 @@ app.use('/api/activity', activityRouter);
 app.use('/admin', controlGame);
 app.use('/api/test', testRouter);
 app.use('/api/profile',profileRouter);
+app.use('/api/profileImage',profileImages);
+app.use('/images', express.static('./images'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

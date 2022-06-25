@@ -5,6 +5,6 @@ module.exports = () => {
         console.log('MongoDB: Connected');
     });
     mongoose.connection.on('error', (err) =>{
-        console.log('MongoDB: Not Connected', err);
+        console.log('MongoDB: Not Connected');
     });
 };
