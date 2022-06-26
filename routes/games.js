@@ -9,6 +9,7 @@ const User = require ('../modelsDB/User.js');
 router.post('/', function(req, res, next) {
   const {gameId, mode} = req.body;
   let league = 0;
+  let uAvatar = "";
   GameList.findOne({gameId : mongoose.Types.ObjectId(gameId)}).then(object =>{
    //Bu oyunun daha önceki ayarı var mı diye bakılır
     if(object==null || Object.keys(object).length === 0){
@@ -16,7 +17,10 @@ router.post('/', function(req, res, next) {
     } //varsa 
     else{ 
       User.findById(mongoose.Types.ObjectId(req.decode.id)).then(user => {
-        if(user.statistics == null || Object.keys(user.statistics).length === 0){ //kullanıcının daha önce statistics kaydı yoksa ilk kayıt eklenir
+        uAvatar = user.avatar;
+        if(user.statistics == null || Object.keys(user.statistics).length === 0){
+           //kullanıcının daha önce statistics kaydı yoksa ilk kayıt eklenir
+          console.log(user.avatar);
           user.statistics.push({gameId : mongoose.Types.ObjectId(object.gameId), league : 0, highestScore : 0, conditionRate : 0});
           const userPromise = user.save();
           userPromise.then(data => {
@@ -49,7 +53,7 @@ router.post('/', function(req, res, next) {
             league : league
             });
             
-       activeGames.players.push({"userId" : req.decode.id, "score" : 0});
+       activeGames.players.push({"userId" : req.decode.id, "score" : 0, "avatar" : uAvatar});
        console.log(activeGames);
         var date = new Date();
         date.setHours(object.endTimeUp+date.getHours());
@@ -66,7 +70,7 @@ router.post('/', function(req, res, next) {
           var s = activedGameData.players.filter(x => x.userId == req.decode.id);
           console.log(s);
           if(s == null || Object.keys(s).length ===0){
-            activedGameData.players.push({"userId": req.decode.id, "score": 0});
+            activedGameData.players.push({"userId": req.decode.id, "score": 0, "avatar" : uAvatar});
             console.log("s");
             const promise = activedGameData.save();
             promise.then((data) => {
@@ -90,6 +94,14 @@ router.post('/', function(req, res, next) {
     console.log(err);
     console.log("hata");
   });
+
+/* GET home page. */
+router.post('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+
+module.exports = router;
+
 });
 
 module.exports = router;

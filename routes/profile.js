@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const User = require ('../modelsDB/User.js');
 const bcrypt = require('bcrypt');
 
-/* Bir oyun ayarı kaydetme */
+
 router.post('/', function(req, res, next) {
     const {password , nickname} = req.body;      
         if(password){
