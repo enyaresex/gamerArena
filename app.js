@@ -11,6 +11,7 @@ const activityRouter = require('./routes/activity');
 const controlGame = require('./routes/controlGame');
 const testRouter = require('./routes/test');
 const profileRouter = require('./routes/profile');
+const movieRouter =require('./routes/movie');
 
 const app = express();
 //db connection
@@ -32,7 +33,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+
+
+app.use('/movie',movieRouter);
+// app.use('/', indexRouter);
 app.use('/api',verifyToken);
 app.use('/users', usersRouter);
 app.use('/api/games', gamesRouter);
