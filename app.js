@@ -11,7 +11,7 @@ const activityRouter = require('./routes/activity');
 const controlGame = require('./routes/controlGame');
 const testRouter = require('./routes/test');
 const profileRouter = require('./routes/profile');
-const movieRouter =require('./routes/movie');
+const profileImages= require('./routes/prolfileImages');
 
 const app = express();
 //db connection
@@ -35,8 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-app.use('/movie',movieRouter);
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/api',verifyToken);
 app.use('/users', usersRouter);
 app.use('/api/games', gamesRouter);
@@ -44,6 +43,8 @@ app.use('/api/activity', activityRouter);
 app.use('/admin', controlGame);
 app.use('/api/test', testRouter);
 app.use('/api/profile',profileRouter);
+app.use('/api/profileImage',profileImages);
+app.use('/images', express.static('./images'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
