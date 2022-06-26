@@ -94,14 +94,30 @@ router.post('/', function(req, res, next) {
     console.log(err);
     console.log("hata");
   });
-
-/* GET home page. */
-router.post('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
 });
 
-module.exports = router;
-
+router.get('/tournementDetail/:id',(req, res)=> {
+  ActiveGames.findById(mongoose.Types.ObjectId(req.params['id'])).then((activeGames)=>{
+    res.json(activeGames);
+  }).catch((err)=>{
+    res.json(err);
+  });
 });
+
+
+router.post('/addNewGameData',(req, res)=> {
+  ActiveGames.findById(mongoose.Types.ObjectId(req.body.activeGameId)).then((activeGames)=>{
+    activeGames.gameData=req.body.gameData;
+    activeGames.save((err,data)=>{
+      if(err)
+       res.json(err);
+     res.json(data);
+    });
+    res.json(activeGames);
+  }).catch((err)=>{
+    res.json(err);
+  });
+});
+
 
 module.exports = router;
