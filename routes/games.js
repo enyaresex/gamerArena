@@ -121,7 +121,8 @@ router.post('/addNewGameData', (req, res) => {
 });
 //javascript object array, object destruct, oyun bittiyse kapat
 router.post('/finishGame', (req, res) => {
-  const { userId, score } = req.body;
+  const { score } = req.body;
+  let  userId = req.decode.id;
   ActiveGames.findOne({ id: mongoose.Types.ObjectId(req.body.activeGameId), "players.userId": mongoose.Types.ObjectId(userId) }).then((activeGames) => {
    
     activeGames.players = activeGames.players.map((item) => {
