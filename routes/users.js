@@ -43,7 +43,7 @@ bcrypt.hash(password, 10). then((hash) =>{
 
 router.post('/login', function(req, res, next) {
   const {nickname, password} = req.body;
- 
+  let userAvatar = "";
  User.findOne({
   nickname
  }, (err,user)=>{
@@ -63,12 +63,16 @@ router.post('/login', function(req, res, next) {
             id : user._id
           };
           const token = jwt.sign(payload, req.app.get('api_secret_key'),{expiresIn : 72000});
+          if(user.avatar){
+            userAvatar = user.avatar;
+          }
+          userAvatar
           res.json({
             token,
             "coin" : 589,
             "wallet" : 4785,
             "nickname" : user.nickname,
-            "avatar" : user.avatar
+            "avatar" : userAvatar
           })
             }
         });

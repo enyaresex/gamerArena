@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     userGuid = uuid.v1()+file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
     cb(null, userGuid);
-   // console.log(file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length));
+    console.log(file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length));
   }
 });
 const upload = multer({storage: storage})
