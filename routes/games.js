@@ -147,4 +147,13 @@ router.get('/playerSort/:id',(req,res)=>{
     res.json(docs);
   });
 });
+
+router.get('/myActiveGames',(req,res)=>{
+  ActiveGames.find({"players.userId": req.decode.id}).then((activeGames)=> {
+    console.log(activeGames);
+    res.json({"activeGames" : activeGames});
+  }).catch((err)=>{
+    res.json(err);
+  })
+});
 module.exports = router;
