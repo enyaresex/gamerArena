@@ -142,5 +142,9 @@ router.post('/finishGame', (req, res) => {
   });
 });
 
-
+router.get('/playerSort/:id',(req,res)=>{
+  ActiveGames.find({_id:req.params['id']}).sort('players.scores').exec(function(err,docs){
+    res.json(docs);
+  });
+});
 module.exports = router;
