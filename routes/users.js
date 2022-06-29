@@ -66,8 +66,10 @@ router.post('/login', function(req, res, next) {
           res.json({
             token,
             "coin" : 589,
-            "wallet" : 4785
-          });
+            "wallet" : 4785,
+            "nickname" : user.nickname,
+            "avatar" : user.avatar
+          })
             }
         });
 
