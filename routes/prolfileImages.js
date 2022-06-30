@@ -50,7 +50,7 @@ router.post('/', upload.single('profile'), (req, res, next) => {
 
     console.log(userGuid);
     console.log(req.decode.id);
-    res.json("zeyneo");
+    res.json(userGuid);
 });
 
 module.exports = router;
