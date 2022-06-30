@@ -14,6 +14,9 @@ const ActiveGameSchema = new Schema({
         type:  Number
     },
     players: [{
+        nickname: {
+            type: String
+        },
         userId: {
             type: Schema.Types.ObjectId
         },

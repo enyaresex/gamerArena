@@ -10,6 +10,7 @@ router.post('/', function (req, res, next) {
   const { gameId, mode } = req.body;
   let league = 0;
   let uAvatar = "";
+  let nicksname = "";
   GameList.findOne({ gameId: mongoose.Types.ObjectId(gameId) }).then(object => {
     //Bu oyunun daha önceki ayarı var mı diye bakılır
     if (object == null || Object.keys(object).length === 0) {
@@ -18,6 +19,7 @@ router.post('/', function (req, res, next) {
     else {
       User.findById(mongoose.Types.ObjectId(req.decode.id)).then(user => {
         uAvatar = user.avatar;
+        nicksname = user.nickname;
         if (user.statistics == null || Object.keys(user.statistics).length === 0) {
           //kullanıcının daha önce statistics kaydı yoksa ilk kayıt eklenir
           console.log(user.avatar);
@@ -54,7 +56,7 @@ router.post('/', function (req, res, next) {
               league: league
             });
 
-            activeGames.players.push({ "userId": req.decode.id, "score": 0, "avatar": uAvatar });
+            activeGames.players.push({ "userId": req.decode.id, "score": 0, "avatar": uAvatar, "nickname": nicksname });
             console.log(activeGames);
             var date = new Date();
             date.setHours(object.endTimeUp + date.getHours());
@@ -122,38 +124,55 @@ router.post('/addNewGameData', (req, res) => {
 //javascript object array, object destruct, oyun bittiyse kapat
 router.post('/finishGame', (req, res) => {
   const { score } = req.body;
-  let  userId = req.decode.id;
+  let userId = req.decode.id;
   ActiveGames.findOne({ id: mongoose.Types.ObjectId(req.body.activeGameId), "players.userId": mongoose.Types.ObjectId(userId) }).then((activeGames) => {
-   
+
     activeGames.players = activeGames.players.map((item) => {
-      if (item.userId.toString() == mongoose.Types.ObjectId(userId).toString()) 
-        return {...item,score}
-        return item
+      if (item.userId.toString() == mongoose.Types.ObjectId(userId).toString())
+        return { ...item, score }
+      return item
     })
     const promise = activeGames.save();
-    promise.then((data)=>{
+    promise.then((data) => {
+      User.findById(req.decode.id).then((datap) => {
+        datap.statistics = datap.statistics.map((item) => {
+          
+          if (item.gameId.toString() == mongoose.Types.ObjectId(data.gameId).toString() && item.highestScore < score)
+            return { ...item, highestScore: score }
+          return item
+        })
+        console.log(datap.statistics);
+        const promiseJelly = datap.save();
+        promiseJelly.then((data) => {
+          console.log(data);
+          console.log("ok");
+        }).catch((err) => {
+          console.log("err");
+        })
+      })
       res.json(data);
-    }).catch((err)=>{
+    }).catch((err) => {
       res.json(err);
     })
-  //  console.log('backUp data',backUp);
-   
+    //  console.log('backUp data',backUp);
+
   }).catch((err) => {
     res.json(err);
   });
 });
 
-router.get('/playerSort/:id',(req,res)=>{
-  ActiveGames.find({_id:req.params['id']}).sort('players.scores').exec(function(err,docs){
+
+router.get('/playerSort/:id', (req, res) => {
+  ActiveGames.find({ _id: req.params['id'] }).sort('players.scores').exec(function (err, docs) {
     res.json(docs);
   });
 });
 
-router.get('/myActiveGames',(req,res)=>{
-  ActiveGames.find({"players.userId": req.decode.id}).then((activeGames)=> {
+router.get('/myActiveGames', (req, res) => {
+  ActiveGames.find({ "players.userId": req.decode.id }).then((activeGames) => {
     console.log(activeGames);
-    res.json({"activeGames" : activeGames});
-  }).catch((err)=>{
+    res.json({ "activeGames": activeGames });
+  }).catch((err) => {
     res.json(err);
   })
 });

@@ -33,30 +33,38 @@ router.post('/', function(req, res, next) {
                 res.json({"msg" : "İşlem başarıyla gerçekleştirildi"});
  
         }
-   
-        if(nickname){
-                
-          User.findById(mongoose.Types.ObjectId(req.decode.id)).then((user)=>{
-              user.nickname = nickname;
-              const promise = user.save();
-              promise.then((data) =>
-              {
-                      
-            }).catch((err)=>
-            { if(err.code == 11000){
-              res.status(400).json( { "msg":"Kullanıcı Zaten Kayıtlı",
-                                    "detail" :err })
-            }
-              });
-          }).catch((err)=>{
-              console.log(err);
-          });
-
-
-
-      }
 
 });
+
+router.post('/updateNickname', function(req,res,next){
+   const {nickname} = req.body;
+  if(nickname){
+                
+    User.findById(mongoose.Types.ObjectId(req.decode.id)).then((user)=>{
+        user.nickname = nickname;
+        const promise = user.save();
+        promise.then((data) =>
+        {
+                res.json(data.nickname);
+      }).catch((err)=>
+      { if(err.code == 11000){
+        res.status(400).json( { "msg":"Kullanıcı Zaten Kayıtlı",
+                              "detail" :err,
+                              "nickname": user.nickname});
+      }
+        });
+    }).catch((err)=>{
+        console.log(err);
+    });
+
+
+
+}
+
+
+
+});
+
 router.get('/getProfile', function(req, res, next) {
   User.findById(mongoose.Types.ObjectId(req.decode.id)).then((user)=> {
     var a = user;
