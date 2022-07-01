@@ -41,10 +41,10 @@ router.post('/', upload.single('profile'), (req, res, next) => {
 
         }
       }).catch((err)=>{
-        console.log(err);
+        req.json(err);
       })
     }).catch((err)=>{
-      console.log(err);
+      req.json(err);
     });
 
 
