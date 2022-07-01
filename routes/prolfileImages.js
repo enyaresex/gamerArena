@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({storage: storage})
-router.post('/', upload.single('profile'), (req, res, next) => {
+router.post('/', upload.array('profile'), (req, res, next) => {
     //console.log(req.decode.id)
     User.findById(mongoose.Types.ObjectId(req.decode.id)).then((user)=>{
       oldImage = user.avatar;
@@ -49,7 +49,7 @@ router.post('/', upload.single('profile'), (req, res, next) => {
 
 
     console.log(userGuid);
-    console.log(req.decode.id);
+   
     res.json(userGuid);
 });
 
