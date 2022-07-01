@@ -13,6 +13,7 @@ const storage = multer.diskStorage({
     cb(null, './images/')
   },
   filename: function (req, file, cb) {
+    console.log(file);
     userGuid = uuid.v1()+file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
     cb(null, userGuid);
     console.log(file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length));
