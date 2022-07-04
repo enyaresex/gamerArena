@@ -121,6 +121,32 @@ router.post('/addNewGameData', (req, res) => {
     res.json(err);
   });
 });
+
+router.post('/addNewGameData', (req, res) => {
+  ActiveGames.findById(mongoose.Types.ObjectId(req.body.activeGameId)).then((activeGames) => {
+    activeGames.gameData = req.body.gameData;
+    activeGames.save((err, data) => {
+      if (err)
+        res.json(err);
+      res.json(data);
+    });
+    res.json(activeGames);
+  }).catch((err) => {
+    res.json(err);
+  });
+});
+
+router.post('/getGameData', (req, res) => {
+  ActiveGames.findById(mongoose.Types.ObjectId(req.body.activeGameId)).then((activeGames) => {
+    if(!activeGames.gameData)
+      res.status(400).json({"status": "false"});
+    else{
+      res.json(activeGames.gameData);
+    }    
+  }).catch((err) => {
+    res.json(err);
+  });
+});
 //javascript object array, object destruct, oyun bittiyse kapat
 router.post('/finishGame', (req, res) => {
   const { score } = req.body;
