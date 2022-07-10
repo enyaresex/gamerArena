@@ -19,8 +19,15 @@ const storage = multer.diskStorage({
     console.log(file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length));
   }
 });
-const upload = multer({storage: storage})
-router.post('/', upload.array('profile'), (req, res, next) => {
+const upload = multer({storage: storage}).single('profile')
+router.post('/',(req, res, next) => {
+  upload(req, res, function(err){
+    if(err instanceof multer.MulterError){
+      return res.status(500).json(err);
+    } else if (err) {
+      return res.status(500).json(err);
+    }
+  })
   req.body = JSON.parse(JSON.stringify(req.body));
     //console.log(req.decode.id)
     User.findById(mongoose.Types.ObjectId(req.decode.id)).then((user)=>{
