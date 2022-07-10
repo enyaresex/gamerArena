@@ -37,7 +37,8 @@ const UserSchema = new Schema ({
         gameId : {type: Schema.Types.ObjectId},
         league : {type: Number},
         highestScore: {type: Number},
-        conditionRate: {type: Number}
+        conditionRate: {type: Number},
+        count : {type : Number}
     }]
 });
 
