@@ -10,18 +10,18 @@ let oldImage;
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    
     cb(null, './images/')
   },
   filename: function (req, file, cb) {
     
     userGuid = uuid.v1()+file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
     cb(null, userGuid);
-    console.log(file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length));
-  }
+     }
 });
 const upload = multer({storage: storage}).single('profile')
 router.post('/',(req, res, next) => {
-  console.log("bla",req);
+  console.log("bla", );
   upload(req, res, function(err){
     if(err instanceof multer.MulterError){
       return res.status(500).json(err);
@@ -29,7 +29,8 @@ router.post('/',(req, res, next) => {
       return res.status(500).json(err);
     }
   })
-  req.body = JSON.parse(JSON.stringify(req.body));
+
+  console.log(req.form);
     //console.log(req.decode.id)
     User.findById(mongoose.Types.ObjectId(req.decode.id)).then((user)=>{
       oldImage = user.avatar;
