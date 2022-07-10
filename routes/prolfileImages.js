@@ -21,6 +21,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({storage: storage}).single('profile')
 router.post('/',(req, res, next) => {
+  console.log("bla",req);
   upload(req, res, function(err){
     if(err instanceof multer.MulterError){
       return res.status(500).json(err);
