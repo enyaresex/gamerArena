@@ -23,7 +23,7 @@ router.post('/', function (req, res, next) {
         if (user.statistics == null || Object.keys(user.statistics).length === 0) {
           //kullanıcının daha önce statistics kaydı yoksa ilk kayıt eklenir
           console.log(user.avatar);
-          user.statistics.push({ gameId: mongoose.Types.ObjectId(object.gameId), league: 0, highestScore: 0, conditionRate: 0 });
+          user.statistics.push({ gameId: mongoose.Types.ObjectId(object.gameId), league: 0, highestScore: 0, conditionRate: 0, count : 0 });
           const userPromise = user.save();
           userPromise.then(data => {
             console.log(data);
