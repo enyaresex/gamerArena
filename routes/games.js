@@ -151,11 +151,14 @@ router.post('/finishGame', (req, res) => {
       User.findById(req.decode.id).then((datap) => {
         datap.statistics = datap.statistics.map((item) => {
           
-          if (item.gameId.toString() == mongoose.Types.ObjectId(data.gameId).toString() && item.highestScore < score)
-            return { ...item, highestScore: score }
-          return item
+          if (item.gameId.toString() == mongoose.Types.ObjectId(data.gameId).toString()){
+            console.log(item);
+          if( item.highestScore < score)
+            return { ...item, highestScore: score , count : item.count+1}
+          return{...item,count : item.count+1}}
         })
         console.log(datap.statistics);
+
         const promiseJelly = datap.save();
         promiseJelly.then((data) => {
           console.log(data);
@@ -189,5 +192,21 @@ router.get('/myActiveGames', (req, res) => {
   }).catch((err) => {
     res.json(err);
   })
+});
+
+router.get('/mostPlayedGames',(req, res) =>{
+  User.findById(mongoose.Types.ObjectId(req.decode.id)).then((user)=>{
+    console.log(user.statistics);
+    if(user.statistics==null|| Object.keys(user.statistics).length===0){
+      res.status(404).json({"msg:":"En çok oynanan oyunlar bulunamadı."});
+    }
+    
+    var a = user.statistics;
+   let sorted = a.sort((a,b) => b.count - a.count)
+    res.json(sorted);
+  
+  }).catch((err)=>{
+    res.json(err);
+  });
 });
 module.exports = router;
