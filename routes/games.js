@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const ActiveGames = require('../modelsDB/ActiveGames');
 const GameList = require('../modelsDB/GameList');
 const User = require('../modelsDB/User.js');
-
+const PastActivity = require('../modelsDB/PastActivity');
 /* Bir Düello Oyuna Başlama */
 router.post('/', function (req, res, next) {
   const { gameId, mode } = req.body;
@@ -22,11 +22,11 @@ router.post('/', function (req, res, next) {
         nicksname = user.nickname;
         if (user.statistics == null || Object.keys(user.statistics).length === 0) {
           //kullanıcının daha önce statistics kaydı yoksa ilk kayıt eklenir
-          console.log(user.avatar);
+        //  console.log(user.avatar);
           user.statistics.push({ gameId: mongoose.Types.ObjectId(object.gameId), league: 0, highestScore: 0, conditionRate: 0, count : 0 });
           const userPromise = user.save();
           userPromise.then(data => {
-            console.log(data);
+        //    console.log(data);
           }).catch(err => {
             res.json(err);
           });
@@ -43,7 +43,7 @@ router.post('/', function (req, res, next) {
       //burada daha önce aynı oyun aynı ligte oyun oluşturulmuş mu diye de bakılacak yoksa aşağıdaki işlem
       // eğer oyun modu 0 bu eğitim modudur.   
       if (mode == 3) {
-        console.log(league);
+       // console.log(league);
         var activedPromise = ActiveGames.findOne({ gameId: mongoose.Types.ObjectId(gameId), mode: mode, league: league, "players.userId": { $ne: req.decode.id }, players: { $size: 1 } });
         activedPromise.then(activedGameData => {
           // console.log(activedGameData);
@@ -57,10 +57,10 @@ router.post('/', function (req, res, next) {
             });
 
             activeGames.players.push({ "userId": req.decode.id, "score": 0, "avatar": uAvatar, "nickname": nicksname });
-            console.log(activeGames);
+          //  console.log(activeGames);
             var date = new Date();
             date.setHours(object.endTimeUp + date.getHours());
-            console.log(date);
+          //  console.log(date);
             activeGames.endTime = date;
             const promise = activeGames.save();
             promise.then((data) => {
@@ -70,11 +70,11 @@ router.post('/', function (req, res, next) {
             });
           } //
           else { //aktif oyun vardır
-            var s = activedGameData.players.filter(x => x.userId == req.decode.id);
-            console.log(s);
+           // var s = activedGameData.players.filter(x => x.userId == req.decode.id);
+            //console.log(s);
             if (s == null || Object.keys(s).length === 0) {
               activedGameData.players.push({ "userId": req.decode.id, "score": 0, "avatar": uAvatar });
-              console.log("s");
+             
               const promise = activedGameData.save();
               promise.then((data) => {
 
@@ -91,12 +91,74 @@ router.post('/', function (req, res, next) {
         });
       }
     }
+    PastActivity.findOne({userId : mongoose.Types.ObjectId(req.decode.id)}).then((data)=>{
+      console.log("dataaa", data);
+      if(!data)
+      { const pastActivity = new PastActivity({
+        userId : req.decode.id,
+       
+      });
+      pastActivity.activities.push({
+        gameId: mongoose.Types.ObjectId(req.body.gameId),
+        type : 1,
+        status : 1,
+        score : 2,
+        prizeType : object.prize.type,
+        prizeCount : object.prize.count
+      })
+      console.log("pastActivity",pastActivity);
+      const prom = pastActivity.save();
+  
+      prom.then((data)=>{
+        console.log(data);
+      }).catch((err)=>{
+        console.log(err);
+      }); }
 
+      else{
+        
+        data.activities.push({ 
+          gameId: mongoose.Types.ObjectId(req.body.gameId),
+          type : 1,
+          status : 1,
+          score : 2,
+          prizeType : object.prize.types,
+          prizeCount : object.prize.count});
+          console.log(data);
+         const prom = data.save();
+         prom.then((a)=>{
+          console.log("a",a);
+         }).catch((err)=>{
+          console.log("err", err);
+         })
+      }
+
+    }).catch((err)=>{
+      console.log(err);
+    });
+   
+    // a.gameId = mongoose.Types.ObjectId(gameId);
+    // a.type = 1;
+    // a.status = 1;
+    // a.score = 0;
+    // a.prizeType = object.prize.types;
+    // a.prizeCount = object.prize.count;
+    // pastActivity.activities = a;
+    // const prom =pastActivity.save();
+    // prom.then((data)=> {
+    //   console.log(data);
+    // }).catch((err)=>{
+    //   console.log(err);
+    // });
+   
   }).catch(err => {
     res.status(400).json(err);
     console.log(err);
     console.log("hata");
   });
+
+
+
 });
 
 router.get('/tournementDetail/:id', (req, res) => {
@@ -139,7 +201,7 @@ router.post('/getGameData', (req, res) => {
 router.post('/finishGame', (req, res) => {
   const { score } = req.body;
   let userId = req.decode.id;
-  ActiveGames.findOne({ id: mongoose.Types.ObjectId(req.body.activeGameId), "players.userId": mongoose.Types.ObjectId(userId) }).then((activeGames) => {
+  ActiveGames.findOne({ _id: mongoose.Types.ObjectId(req.body.activeGameId), "players.userId": mongoose.Types.ObjectId(userId) }).then((activeGames) => {
 
     activeGames.players = activeGames.players.map((item) => {
       if (item.userId.toString() == mongoose.Types.ObjectId(userId).toString())

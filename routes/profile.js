@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 //Models
 const User = require ('../modelsDB/User.js');
+const PastActivity = require ('../modelsDB/PastActivity.js');
 const bcrypt = require('bcrypt');
 
 
@@ -79,5 +80,13 @@ router.get('/getUserStatistics',(req,res)=>{
   res.json(user.statistics); 
   })
 });
+
+
+router.get('/pastUserActivity',(req,res)=>{
+  PastActivity.findOne({id : mongoose.Types.ObjectId(req.decode.id)}).then((activity)=>{
+  res.json(activity.activities); 
+  })
+});
+
 module.exports = router;
 
