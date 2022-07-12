@@ -45,6 +45,7 @@ app.use('/api/test', testRouter);
 app.use('/api/profile',profileRouter);
 app.use('/api/profileImage',profileImages);
 app.use('/images', express.static('./images'));
+app.use('/gameImages', express.static('./gameImages'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
