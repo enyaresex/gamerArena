@@ -19,16 +19,16 @@ const storage = multer.diskStorage({
     cb(null, userGuid);
      }
 });
-const upload = multer({storage: storage}).single('profile')
-router.post('/',(req, res, next) => {
-  console.log("bla", );
-  upload(req, res, function(err){
-    if(err instanceof multer.MulterError){
-      return res.status(500).json(err);
-    } else if (err) {
-      return res.status(500).json(err);
-    }
-  })
+const upload = multer({storage: storage})
+router.post('/',upload.single('profile'),(req, res, next) => {
+  console.log("bla", req);
+  // upload(req, res, function(err){
+  //   if(err instanceof multer.MulterError){
+  //     return res.status(500).json(err);
+  //   } else if (err) {
+  //     return res.status(500).json(err);
+  //   }
+  // })
 
   console.log(req.form);
     //console.log(req.decode.id)
