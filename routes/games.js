@@ -5,6 +5,7 @@ const ActiveGames = require('../modelsDB/ActiveGames');
 const GameList = require('../modelsDB/GameList');
 const User = require('../modelsDB/User.js');
 const PastActivity = require('../modelsDB/PastActivity');
+const Logs = require('../modelsDB/logs');
 /* Bir Düello Oyuna Başlama */
 router.post('/', function (req, res, next) {
   const { gameId, mode } = req.body;
@@ -157,7 +158,19 @@ router.post('/', function (req, res, next) {
     console.log("hata");
   });
 
+  var a = req.body;
+a["user"] = req.decode.id;
+const logs = new Logs({
+logs : a,
+types: 3
+});
 
+const promise = logs.save();
+promise.then((data)=>{
+console.log(data);
+}).catch((err)=>{
+console.log(err);
+});
 
 });
 
@@ -166,6 +179,19 @@ router.get('/tournementDetail/:id', (req, res) => {
     res.json(activeGames);
   }).catch((err) => {
     res.json(err);
+  });
+  var a = req.body;
+  a["user"] = req.decode.id;
+  const logs = new Logs({
+  logs : a,
+  types: 3
+  });
+  
+  const promise = logs.save();
+  promise.then((data)=>{
+  console.log(data);
+  }).catch((err)=>{
+  console.log(err);
   });
 });
 
@@ -182,6 +208,19 @@ router.post('/addNewGameData', (req, res) => {
   }).catch((err) => {
     res.json(err);
   });
+  var a = req.body;
+  a["user"] = req.decode.id;
+  const logs = new Logs({
+  logs : a,
+  types: 3
+  });
+  
+  const promise = logs.save();
+  promise.then((data)=>{
+  console.log(data);
+  }).catch((err)=>{
+  console.log(err);
+  });
 });
 
 
@@ -194,6 +233,19 @@ router.post('/getGameData', (req, res) => {
     }    
   }).catch((err) => {
     res.json(err);
+  });
+  var a = req.body;
+  a["user"] = req.decode.id;
+  const logs = new Logs({
+  logs : a,
+  types: 3
+  });
+  
+  const promise = logs.save();
+  promise.then((data)=>{
+  console.log(data);
+  }).catch((err)=>{
+  console.log(err);
   });
 });
 
@@ -238,12 +290,38 @@ router.post('/finishGame', (req, res) => {
   }).catch((err) => {
     res.json(err);
   });
+  var a = req.body;
+  a["user"] = req.decode.id;
+  const logs = new Logs({
+  logs : a,
+  types: 3
+  });
+  
+  const promise = logs.save();
+  promise.then((data)=>{
+  console.log(data);
+  }).catch((err)=>{
+  console.log(err);
+  });
 });
 
 
 router.get('/playerSort/:id', (req, res) => {
   ActiveGames.find({ _id: req.params['id'] }).sort('players.scores').exec(function (err, docs) {
     res.json(docs);
+  });
+  var a = req.body;
+  a["user"] = req.decode.id;
+  const logs = new Logs({
+  logs : a,
+  types: 3
+  });
+  
+  const promise = logs.save();
+  promise.then((data)=>{
+  console.log(data);
+  }).catch((err)=>{
+  console.log(err);
   });
 });
 
@@ -253,7 +331,20 @@ router.get('/myActiveGames', (req, res) => {
     res.json({ "activeGames": activeGames });
   }).catch((err) => {
     res.json(err);
-  })
+  });
+  var a = req.body;
+  a["user"] = req.decode.id;
+  const logs = new Logs({
+  logs : a,
+  types: 3
+  });
+  
+  const promise = logs.save();
+  promise.then((data)=>{
+  console.log(data);
+  }).catch((err)=>{
+  console.log(err);
+  });
 });
 
 router.get('/mostPlayedGames',(req, res) =>{
@@ -269,6 +360,19 @@ router.get('/mostPlayedGames',(req, res) =>{
   
   }).catch((err)=>{
     res.json(err);
+  });
+  var a = req.body;
+  a["user"] = req.decode.id;
+  const logs = new Logs({
+  logs : a,
+  types: 3
+  });
+  
+  const promise = logs.save();
+  promise.then((data)=>{
+  console.log(data);
+  }).catch((err)=>{
+  console.log(err);
   });
 });
 module.exports = router;

@@ -7,6 +7,7 @@ const multer = require('multer');
 const mongoose = require('mongoose');
 let userGuid;
 const fs = require('fs');
+const Logs = require('../modelsDB/logs');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     console.log(req.body.name);
@@ -65,6 +66,17 @@ router.get('/getGames', function(req, res, next) {
         res.json(err);
     })
 });
+
+router.get('/getLogs', function(req, res, next) {
+    
+    Logs.find().then((data)=>{
+        res.json(data);
+    }).catch((err)=>{
+        res.json(err);
+    });
+
+});
+
 
 
 module.exports = router;
