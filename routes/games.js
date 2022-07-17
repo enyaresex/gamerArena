@@ -90,10 +90,56 @@ router.post('/', function (req, res, next) {
             res.json(activedGameData);
           }
         }).catch(err => {
-          res.json("ersssr");
+          res.json(err);
         });
       }
+      
     }
+    PastActivity.findOne({userId : mongoose.Types.ObjectId(req.decode.id)}).then((data)=>{
+      console.log("dataaa", data);
+      if(!data)
+      { const pastActivity = new PastActivity({
+        userId : req.decode.id,
+       
+      });
+      pastActivity.activities.push({
+        gameId: mongoose.Types.ObjectId(req.body.gameId),
+        type : 1,
+        status : 1,
+        score : 2,
+        prizeType : object.prize.type,
+        prizeCount : object.prize.count
+      })
+      console.log("pastActivity",pastActivity);
+      const prom = pastActivity.save();
+  
+      prom.then((data)=>{
+        console.log(data);
+      }).catch((err)=>{
+        console.log(err);
+      }); }
+
+      else{
+        
+        data.activities.push({ 
+          gameId: mongoose.Types.ObjectId(req.body.gameId),
+          type : 1,
+          status : 1,
+          score : 2,
+          prizeType : object.prize.types,
+          prizeCount : object.prize.count});
+          console.log(data);
+         const prom = data.save();
+         prom.then((a)=>{
+          console.log("a",a);
+         }).catch((err)=>{
+          console.log("err", err);
+         })
+      }
+
+    }).catch((err)=>{
+      console.log(err);
+    });
   }).catch(err => {
     res.status(400).json(err);
    // console.log(err);
